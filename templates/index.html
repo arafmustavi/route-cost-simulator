@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voyagraph — Trip Graph Simulator</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+
+<header class="titlebar">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M6 24 L14 10 L20 18 L26 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="6" cy="24" r="3"/><circle cx="14" cy="10" r="3"/>
+      <circle cx="20" cy="18" r="3"/><circle cx="26" cy="8" r="3"/>
+    </svg>
+    <div>
+      <h1>Voyagraph</h1>
+      <input id="tripName" class="tripname" value="Untitled trip" spellcheck="false">
+    </div>
+  </div>
+  <div class="titlebar-actions">
+    <select id="currency" class="pill" title="Currency">
+      <option>USD</option><option>EUR</option><option>GBP</option>
+      <option>IDR</option><option>JPY</option><option>SGD</option>
+      <option>AED</option><option>INR</option><option>AUD</option>
+    </select>
+    <button class="pill" id="btnSample">Load sample</button>
+    <button class="pill" id="btnImport">Import</button>
+    <button class="pill" id="btnExport">Export</button>
+    <button class="pill primary" id="btnSave">Save</button>
+    <button class="pill icon" id="btnTheme" title="Toggle appearance">◐</button>
+    <input type="file" id="fileInput" accept="application/json" hidden>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- ───────── Left: builder ───────── -->
+  <aside class="panel left">
+    <div class="seg" role="tablist">
+      <button class="seg-btn active" data-tab="places">Places</button>
+      <button class="seg-btn" data-tab="links">Connections</button>
+    </div>
+
+    <section id="tab-places" class="tabpane active">
+      <form id="nodeForm" class="card form">
+        <h3 id="nodeFormTitle">Add a place</h3>
+        <label>Name<input id="n_name" required placeholder="Tokyo"></label>
+        <div class="row">
+          <label>Country<input id="n_country" placeholder="Japan"></label>
+          <label>Nights<input id="n_nights" type="number" min="0" step="0.5" value="0"></label>
+        </div>
+        <div class="row">
+          <label>Hotel / night<input id="n_nightly" type="number" min="0" step="1" value="0"></label>
+          <label>Daily spend<input id="n_daily" type="number" min="0" step="1" value="0"></label>
+        </div>
+        <label>Notes<input id="n_notes" placeholder="Visa on arrival, book early…"></label>
+        <div class="row end">
+          <button type="button" class="pill ghost" id="nodeCancel" hidden>Cancel</button>
+          <button class="pill primary" type="submit" id="nodeSubmit">Add place</button>
+        </div>
+      </form>
+      <div id="nodeList" class="list"></div>
+    </section>
+
+    <section id="tab-links" class="tabpane">
+      <form id="edgeForm" class="card form">
+        <h3 id="edgeFormTitle">Add a connection</h3>
+        <div class="row">
+          <label>From<select id="e_from"></select></label>
+          <label>To<select id="e_to"></select></label>
+        </div>
+        <div class="row">
+          <label>Mode<select id="e_mode">
+            <option>flight</option><option>train</option><option>bus</option>
+            <option>ferry</option><option>car</option><option>rideshare</option>
+            <option>walk</option><option>other</option>
+          </select></label>
+          <label>Fare<input id="e_cost" type="number" min="0" step="1" value="0"></label>
+        </div>
+        <div class="row">
+          <label>Travel hrs<input id="e_dur" type="number" min="0" step="0.25" value="0"></label>
+          <label>Transfer hrs<input id="e_wait" type="number" min="0" step="0.25" value="0"></label>
+        </div>
+        <div class="row">
+          <label>Price swing ±%<input id="e_var" type="number" min="0" step="1" value="15"></label>
+          <label class="check"><input id="e_bi" type="checkbox" checked><span>Works both ways</span></label>
+        </div>
+        <label>Notes<input id="e_notes" placeholder="Red-eye, baggage extra…"></label>
+        <div class="row end">
+          <button type="button" class="pill ghost" id="edgeCancel" hidden>Cancel</button>
+          <button class="pill primary" type="submit" id="edgeSubmit">Add connection</button>
+        </div>
+      </form>
+      <div id="edgeList" class="list"></div>
+    </section>
+  </aside>
+
+  <!-- ───────── Centre: canvas ───────── -->
+  <section class="panel center">
+    <div class="canvas-bar">
+      <span class="hint">Drag nodes to arrange · Click a node to edit · Shift-drag between nodes to connect</span>
+      <div class="canvas-bar-actions">
+        <button class="pill ghost" id="btnTidy">Auto-arrange</button>
+        <button class="pill ghost" id="btnFit">Fit</button>
+      </div>
+    </div>
+    <canvas id="graph"></canvas>
+    <div id="stats" class="statsbar"></div>
+  </section>
+
+  <!-- ───────── Right: simulation ───────── -->
+  <aside class="panel right">
+    <div class="card">
+      <h3>Simulate</h3>
+      <div class="seg small">
+        <button class="seg-btn active" data-mode="route">A → B</button>
+        <button class="seg-btn" data-mode="tour">Multi-city</button>
+      </div>
+
+      <label>Start<select id="s_start"></select></label>
+
+      <div id="routeOnly">
+        <label>Destination<select id="s_end"></select></label>
+      </div>
+
+      <div id="tourOnly" hidden>
+        <label>Must visit</label>
+        <div id="s_must" class="chips"></div>
+        <label>End at (optional)<select id="s_tourend"><option value="">— anywhere —</option></select></label>
+      </div>
+
+      <label class="slider">
+        <span>Value of your time <b id="tvLabel">0</b> / hour</span>
+        <input id="s_timevalue" type="range" min="0" max="100" step="1" value="0">
+      </label>
+      <p class="micro">0 = cheapest possible. Raise it to start trading money for shorter journeys.</p>
+
+      <details class="adv">
+        <summary>Preferences</summary>
+        <label class="check"><input type="checkbox" id="p_noflight"><span>Avoid flights</span></label>
+        <label class="check"><input type="checkbox" id="p_nobus"><span>Avoid buses</span></label>
+        <label>Simulation runs<input id="s_runs" type="number" min="500" max="50000" step="500" value="5000"></label>
+        <label>Hotel price swing ±%<input id="s_stayvar" type="number" min="0" max="60" step="1" value="10"></label>
+      </details>
+
+      <button class="pill primary wide" id="btnRun">Run simulation</button>
+    </div>
+
+    <div id="results" class="results"></div>
+  </aside>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script src="/static/js/graph.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "Japan + SE Asia recce",
+  "currency": "USD",
+  "nodes": [
+    {"id":"n_jkt","name":"Jakarta","country":"Indonesia","stay_nights":0,"nightly_cost":0,"daily_spend":0,"notes":"Home base","x":220,"y":430},
+    {"id":"n_sin","name":"Singapore","country":"Singapore","stay_nights":1,"nightly_cost":140,"daily_spend":70,"notes":"Cheap hub, pricey hotels","x":400,"y":360},
+    {"id":"n_kul","name":"Kuala Lumpur","country":"Malaysia","stay_nights":1,"nightly_cost":60,"daily_spend":35,"notes":"Good budget stopover","x":300,"y":300},
+    {"id":"n_bkk","name":"Bangkok","country":"Thailand","stay_nights":2,"nightly_cost":70,"daily_spend":40,"notes":"Best fare hub in the region","x":420,"y":210},
+    {"id":"n_hkg","name":"Hong Kong","country":"Hong Kong","stay_nights":1,"nightly_cost":150,"daily_spend":65,"notes":"Transit option","x":600,"y":200},
+    {"id":"n_tyo","name":"Tokyo","country":"Japan","stay_nights":4,"nightly_cost":110,"daily_spend":80,"notes":"Disney Sea day","x":820,"y":150},
+    {"id":"n_osa","name":"Osaka","country":"Japan","stay_nights":3,"nightly_cost":95,"daily_spend":75,"notes":"Universal Studios","x":760,"y":300},
+    {"id":"n_kyo","name":"Kyoto","country":"Japan","stay_nights":2,"nightly_cost":105,"daily_spend":60,"notes":"Day trips from Osaka possible","x":860,"y":380},
+    {"id":"n_hir","name":"Hiroshima","country":"Japan","stay_nights":1,"nightly_cost":85,"daily_spend":55,"notes":"JR Pass makes this cheap","x":650,"y":420},
+    {"id":"n_dps","name":"Bali","country":"Indonesia","stay_nights":3,"nightly_cost":55,"daily_spend":45,"notes":"Wind-down leg","x":300,"y":520}
+  ],
+  "edges": [
+    {"id":"e1","source":"n_jkt","target":"n_sin","mode":"flight","cost":95,"duration_h":1.8,"wait_h":2.5,"cost_var_pct":20,"bidirectional":true,"notes":"LCC, hand luggage only"},
+    {"id":"e2","source":"n_jkt","target":"n_kul","mode":"flight","cost":80,"duration_h":2.0,"wait_h":2.5,"cost_var_pct":25,"bidirectional":true,"notes":"Cheapest exit from Jakarta"},
+    {"id":"e3","source":"n_sin","target":"n_kul","mode":"bus","cost":25,"duration_h":5.5,"wait_h":1.0,"cost_var_pct":10,"bidirectional":true,"notes":"Overnight coach"},
+    {"id":"e4","source":"n_kul","target":"n_bkk","mode":"flight","cost":90,"duration_h":2.2,"wait_h":2.5,"cost_var_pct":20,"bidirectional":true,"notes":""},
+    {"id":"e5","source":"n_sin","target":"n_bkk","mode":"flight","cost":110,"duration_h":2.5,"wait_h":2.5,"cost_var_pct":18,"bidirectional":true,"notes":""},
+    {"id":"e6","source":"n_bkk","target":"n_hkg","mode":"flight","cost":160,"duration_h":2.8,"wait_h":2.5,"cost_var_pct":22,"bidirectional":true,"notes":""},
+    {"id":"e7","source":"n_bkk","target":"n_tyo","mode":"flight","cost":330,"duration_h":6.0,"wait_h":3.0,"cost_var_pct":25,"bidirectional":true,"notes":"Cheapest long-haul into Japan"},
+    {"id":"e8","source":"n_hkg","target":"n_tyo","mode":"flight","cost":290,"duration_h":4.2,"wait_h":3.0,"cost_var_pct":22,"bidirectional":true,"notes":""},
+    {"id":"e9","source":"n_sin","target":"n_tyo","mode":"flight","cost":430,"duration_h":7.0,"wait_h":3.0,"cost_var_pct":20,"bidirectional":true,"notes":"Direct but pricey"},
+    {"id":"e10","source":"n_hkg","target":"n_osa","mode":"flight","cost":260,"duration_h":3.6,"wait_h":3.0,"cost_var_pct":22,"bidirectional":true,"notes":""},
+    {"id":"e11","source":"n_tyo","target":"n_osa","mode":"train","cost":95,"duration_h":2.5,"wait_h":0.5,"cost_var_pct":5,"bidirectional":true,"notes":"Shinkansen, covered by JR Pass"},
+    {"id":"e12","source":"n_tyo","target":"n_osa","mode":"bus","cost":30,"duration_h":8.5,"wait_h":0.5,"cost_var_pct":12,"bidirectional":true,"notes":"Overnight bus, saves a hotel night"},
+    {"id":"e13","source":"n_osa","target":"n_kyo","mode":"train","cost":9,"duration_h":0.5,"wait_h":0.3,"cost_var_pct":5,"bidirectional":true,"notes":"Local line, very frequent"},
+    {"id":"e14","source":"n_osa","target":"n_hir","mode":"train","cost":70,"duration_h":1.6,"wait_h":0.5,"cost_var_pct":6,"bidirectional":true,"notes":"Shinkansen"},
+    {"id":"e15","source":"n_kyo","target":"n_hir","mode":"train","cost":80,"duration_h":1.9,"wait_h":0.5,"cost_var_pct":6,"bidirectional":true,"notes":""},
+    {"id":"e16","source":"n_tyo","target":"n_kyo","mode":"train","cost":100,"duration_h":2.3,"wait_h":0.5,"cost_var_pct":5,"bidirectional":true,"notes":""},
+    {"id":"e17","source":"n_dps","target":"n_jkt","mode":"flight","cost":60,"duration_h":1.9,"wait_h":2.0,"cost_var_pct":25,"bidirectional":true,"notes":"Domestic"},
+    {"id":"e18","source":"n_dps","target":"n_sin","mode":"flight","cost":90,"duration_h":2.6,"wait_h":2.5,"cost_var_pct":22,"bidirectional":true,"notes":""},
+    {"id":"e19","source":"n_dps","target":"n_osa","mode":"flight","cost":310,"duration_h":6.8,"wait_h":3.0,"cost_var_pct":28,"bidirectional":true,"notes":"Seasonal direct"}
+  ]
+}
